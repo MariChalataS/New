@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>მომხმარებლის შეფასებები</title>
+<link rel="stylesheet" href="reviews.css">
+</head>
+<body>
+
+<!-- HEADER — უცვლელი -->
+<header class="main-header">
+    <nav>
+        <a href="index.php" class="logo"><img src="images/logo.jpg" alt="GS Golden Group"></a>
+        <div class="nav-links">
+            <ul>
+                <li><a href="index.php">მთავარი</a></li>
+                <li><a href="about.html">ჩვენ შესახებ</a></li>
+                <li><a href="reviews.html">შეფასებები</a></li>
+                <li><a href="contact.html">კონტაქტი</a></li>
+                <li><a href="#" onclick="showLogin()"><img src="images/login.png" 
+            alt="Icon" 
+            style="width: 25px; height: 25px; background-color: #fff;"></a></li>
+          <li><a href="#" onclick="showRegister()"><img src="images/register.png" 
+            alt="Icon" 
+            style="width: 25px; height: 25px; background-color: #fff"></a></li>
+            </ul>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('loginModal')">&times;</span>
+    <h2>შესვლა</h2>
+    <form method="POST" action="login.php">
+        <input type="text" name="username" placeholder="მომხმარებლის სახელი" required>
+        <input type="password" name="password" placeholder="პაროლი" required>
+        <button type="submit" class="form-btn">შესვლა</button>
+    </form>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div id="registerModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('registerModal')">&times;</span>
+    <h2>რეგისტრაცია</h2>
+    <form method="POST" action="register.php">
+        <input type="text" name="username" placeholder="მომხმარებლის სახელი" required>
+        <input type="email" name="email" placeholder="ელ.ფოსტა" required>
+        <input type="password" name="password" placeholder="პაროლი" required>
+        <button type="submit" class="form-btn">რეგისტრაცია</button>
+    </form>
+  </div>
+</div>
+
+  <style>
+  /* Modal background */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+  }
+  
+  /* Modal content box */
+  .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 300px;
+    position: relative;
+    text-align: center;
+  }
+  
+  /* Close button */
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  
+  /* Input groups */
+  .input-group {
+    position: relative;
+    margin: 20px 0;
+  }
+  
+  .input-group i {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    color: #555;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Buttons */
+  .form-btn {
+    padding: 10px 20px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .form-btn:hover {
+    background: #0056b3;
+  }
+  </style>
+
+  <script>
+  function showLogin() {
+    document.getElementById('loginModal').style.display = 'block';
+  }
+  
+  function showRegister() {
+    document.getElementById('registerModal').style.display = 'block';
+  }
+  
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+      event.target.style.display = "none";
+    }
+  }
+  </script>
+
+<!-- REVIEW SECTION -->
+<div class="reviews-wrapper">
+
+    <!-- მარცხენა ნაწილი: კომენტარის დატოვება -->
+    <div class="write-box">
+        <h2>დაწერე კომენტარი</h2>
+
+        <input id="name" type="text" placeholder="თქვენი სახელი">
+
+        <!-- Interactive stars -->
+        <div class="stars-input">
+            <span class="star" data-value="1">☆</span>
+            <span class="star" data-value="2">☆</span>
+            <span class="star" data-value="3">☆</span>
+            <span class="star" data-value="4">☆</span>
+            <span class="star" data-value="5">☆</span>
+        </div>
+        <input type="hidden" id="stars" value="5">
+
+        <textarea id="comment" placeholder="დაწერეთ თქვენი შეფასება..."></textarea>
+        <button onclick="addReview()">გაგზავნა</button>
+    </div>
+
+    <!-- მარჯვნივ: გამოქვეყნებული კომენტარები -->
+    <div class="reviews-box">
+        <h2>კომენტარები</h2>
+        <div id="reviews"></div>
+        <div id="pagination" class="pagination"></div>
+    </div>
+
+</div>
+
+<!-- FOOTER — უცვლელი -->
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-about">
+            <p>უძრავი ქონების გაყიდვა • გაქირავება</p>
+        </div>
+
+        <div class="footer-contact-horizontal">
+            <p><strong>📞</strong> +995 555 12 34 56</p>
+            <p><strong>📧</strong> info@gsgoldengroup.ge</p>
+            <p><strong>📍</strong> თბილისი, კალოუბნის N1</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 GS Golden Group • ყველა უფლება დაცულია
+    </div>
+</footer>
+
+<script>
+const reviewsPerPage = 3; // თითო გვერდზე 3 კომენტარი
+let currentPage = 1;
+
+// Interactive stars
+const starsInput = document.querySelectorAll(".stars-input .star");
+const starsHidden = document.getElementById("stars");
+
+starsInput.forEach(star => {
+    star.addEventListener("mouseover", () => {
+        highlightStars(star.dataset.value);
+    });
+
+    star.addEventListener("mouseout", () => {
+        highlightStars(starsHidden.value);
+    });
+
+    star.addEventListener("click", () => {
+        starsHidden.value = star.dataset.value;
+        highlightStars(star.dataset.value);
+    });
+});
+
+function highlightStars(value) {
+    starsInput.forEach(star => {
+        if (star.dataset.value <= value) {
+            star.textContent = "⭐";
+        } else {
+            star.textContent = "☆";
+        }
+    });
+}
+
+// Add review
+function addReview() {
+    let name = document.getElementById("name").value.trim();
+    let stars = starsHidden.value;
+    let comment = document.getElementById("comment").value.trim();
+
+    if (name === "" || comment === "") {
+        alert("გთხოვთ შევსოთ ყველა ველი.");
+        return;
+    }
+
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    reviews.push({
+        name: name,
+        stars: stars,
+        comment: comment,
+        date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+
+    document.getElementById("name").value = "";
+    document.getElementById("comment").value = "";
+    starsHidden.value = 5;
+    highlightStars(5);
+
+    currentPage = Math.ceil(reviews.length / reviewsPerPage);
+
+    loadReviews();
+}
+
+// Load reviews with pagination
+function loadReviews() {
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    let container = document.getElementById("reviews");
+    let pagination = document.getElementById("pagination");
+
+    container.innerHTML = "";
+
+    let totalPages = Math.ceil(reviews.length / reviewsPerPage);
+
+    let start = (currentPage - 1) * reviewsPerPage;
+    let end = start + reviewsPerPage;
+    let paginatedReviews = reviews.slice().reverse().slice(start, end);
+
+    paginatedReviews.forEach(r => {
+        container.innerHTML += `
+            <div class="review-card">
+                <div class="review-top">
+                    <span class="author">${r.name}</span>
+                    <span class="date">${r.date}</span>
+                </div>
+                <div class="stars">${"⭐".repeat(r.stars)}</div>
+                <p>${r.comment}</p>
+            </div>
+        `;
+    });
+
+    // Pagination buttons
+    pagination.innerHTML = "";
+    if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+            pagination.innerHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="gotoPage(${i})">${i}</button>`;
+        }
+    }
+}
+
+function gotoPage(page) {
+    currentPage = page;
+    loadReviews();
+}
+
+loadReviews();
+</script>
+
+</body>
+</html>
